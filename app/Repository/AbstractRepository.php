@@ -10,28 +10,39 @@ abstract class AbstractRepository
 	 */
 	protected $model;
 
-	public function __construct(Model $model)
-	{
-		$this->model = $model;
-	}
+    public function __construct(Model $model, Request $request = null)
+    {
+        $this->model = $model;
 
-	public function selectCoditions($coditions)
-	{
-		$expressions = explode(';', $coditions);
-		foreach($expressions as $e) {
-			$exp = explode(':', $e);
+        if($request) {
+            if($request->has('condiction')) {
+                $this->selectCondictions($request->query('condiction'));
+            }
 
-			$this->model = $this->model->where($exp[0], $exp[1], $exp[2]);
-		}
-	}
+            if($request->has('filter')) {
+                $this->selectFilters($request->query('filter'));
+            }
+        }
+    }
 
-	public function selectFilter($filters)
-	{
-		$this->model = $this->model->selectRaw($filters);
-	}
+    public function selectCondictions($condictions)
+    {
+        $expressions = explode(';', $condictions);
 
-	public function getResult()
-	{
-		return $this->model;
-	}
+        foreach($expressions as $expression) {
+            $expression = explode(':', $expression);
+
+            $this->model = $this->model->where($expression[0], $expression[1], $expression[2]);
+        }
+    }
+
+    public function selectFilters($filters)
+    {
+        $this->model = $this->model->selectRaw($filters);
+    }
+
+    public function getResult()
+    {
+        return $this->model;
+    }
 }
