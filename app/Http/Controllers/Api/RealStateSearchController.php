@@ -28,8 +28,6 @@ class RealStateSearchController extends Controller
 		    $repository->selectFilter($request->get('fields'));
 	    }
 
-	    $repository->setLocation($request->all(['state', 'city']));
-
         return response()->json([
         	'data' => $repository->getResult()->paginate(10)
         ], 200);
