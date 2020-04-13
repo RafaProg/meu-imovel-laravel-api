@@ -19,14 +19,7 @@ class RealStateSearchController extends Controller
 
     public function index(Request $request)
     {
-	    $repository = new RealStateRepository($this->realState);
-
-	    if($request->has('coditions')) {
-		    $repository->selectCoditions($request->get('coditions'));
-	    }
-	    if($request->has('fields')) {
-		    $repository->selectFilter($request->get('fields'));
-	    }
+	    $repository = new RealStateRepository($this->realState, $request);
 
 	    $repository->setLocation($request->all(['state', 'city']));
 
