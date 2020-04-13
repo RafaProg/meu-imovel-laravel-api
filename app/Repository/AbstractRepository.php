@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository;
 
+use Illuminate\Http\Request
 use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractRepository
@@ -10,9 +11,19 @@ abstract class AbstractRepository
 	 */
 	protected $model;
 
-	public function __construct(Model $model)
+	public function __construct(Model $model, Request $request = null)
 	{
 		$this->model = $model;
+        
+        if($request) {
+            if($request->has('condiction')) {
+                $this->selectCondictions($request->query('condictions'));
+            }
+
+            if($request->has('filter')) {
+                $this->selectFilter($request->query('filters'));
+            }
+        }
 	}
 
 	public function selectCoditions($coditions)
